@@ -1,5 +1,4 @@
 NAME = pipex
-BONUS = pipex_bonus
 
 MAKEFLAGS = --no-print-directory
 
@@ -33,11 +32,6 @@ all: $(NAME)
 $(NAME): $(LIBFT) $(OBJ)
 	$(CC) $(CFLAGS) $(OBJ) $(LIBFT_FLAGS) -o $(NAME)
 
-bonus: $(BONUS)
-
-$(BONUS): $(LIBFT) $(OBJ)
-	$(CC) $(CFLAGS) $(OBJ) $(LIBFT_FLAGS) -o $(BONUS)
-
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.c
 	@mkdir -p $(dir $@)
 	$(CC) $(CFLAGS) -c $< -o $@ $(INC) $(INC_LIBFT)
@@ -51,9 +45,9 @@ clean:
 	$(MAKE) -C $(LIBFT_DIR) clean
 
 fclean: clean
-	$(RM) $(NAME) $(BONUS)
+	$(RM) $(NAME)
 	$(MAKE) -C $(LIBFT_DIR) fclean
 
-re: fclean all bonus
+re: fclean all
 
 .PHONY: all clean fclean re

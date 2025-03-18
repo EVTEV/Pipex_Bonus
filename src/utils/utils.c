@@ -1,4 +1,3 @@
-
 #include "../../inc/pipex_bonus.h"
 
 void	msg_error(char *msg)

@@ -1,6 +1,6 @@
 #include "../../inc/pipex_bonus.h"
 
-static void	setup_io(t_pipex *pipex, int i)
+static void	setup_stdin(t_pipex *pipex, int i)
 {
 	int	null_fd;
 
@@ -21,11 +21,14 @@ static void	setup_io(t_pipex *pipex, int i)
 			}
 		}
 	}
-	else
-	{
-		if (dup2(pipex->pipes[i - 1][0], STDIN_FILENO) < 0)
-			msg_error("dup2");
-	}
+	else if (dup2(pipex->pipes[i - 1][0], STDIN_FILENO) < 0)
+		msg_error("dup2");
+}
+
+static void	setup_stdout(t_pipex *pipex, int i)
+{
+	int	null_fd;
+
 	if (i == pipex->cmd_count - 1)
 	{
 		if (pipex->outfile >= 0)
@@ -43,16 +46,14 @@ static void	setup_io(t_pipex *pipex, int i)
 			}
 		}
 	}
-	else
-	{
-		if (dup2(pipex->pipes[i][1], STDOUT_FILENO) < 0)
-			msg_error("dup2");
-	}
+	else if (dup2(pipex->pipes[i][1], STDOUT_FILENO) < 0)
+		msg_error("dup2");
 }
 
 void	child_process(t_pipex *pipex, int i, char **envp)
 {
-	setup_io(pipex, i);
+	setup_stdin(pipex, i);
+	setup_stdout(pipex, i);
 	close_pipes(pipex);
 	if (pipex->infile >= 0)
 		close(pipex->infile);

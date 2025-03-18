@@ -4,7 +4,7 @@ int	handle_here_doc(t_pipex *pipex, char *limiter)
 {
 	char	*line;
 	int		pipe_fd[2];
-	
+
 	if (pipe(pipe_fd) < 0)
 		return (p_error("pipe"));
 	pipex->infile = pipe_fd[0];

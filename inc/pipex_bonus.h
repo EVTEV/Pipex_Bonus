@@ -24,31 +24,30 @@ typedef struct s_pipex
 	char	*limiter;
 }	t_pipex;
 
-// -------------------- Pars --------------------- //
+/* Parse */
 int		check_args(int ac, char **av);
 char	*find_cmd_path(char *cmd, char **env_path);
 char	**get_env_path(char **envp);
 
-// -------------------- Pipe -------------------- //
-void	init_pipex(t_pipex *pipex, int ac, char **av, char **envp);
+/* Pipe */
+void	create_pipes(t_pipex *pipex);
+void	close_pipes(t_pipex *pipex);
 void	free_pipex(t_pipex *pipex);
 void	free_env_path(char **env_path);
 void	free_cmds(char ***cmds, int cmd_count);
-void	close_pipes(t_pipex *pipex);
 
-// -------------------- Exec -------------------- //
+/* Exec */
 void	child_process(t_pipex *pipex, int i, char **envp);
 int		init_command(t_pipex *pipex, int ac, char **av);
 int		exec_command(t_pipex *pipex, char **envp);
 int		my_exec(t_pipex *pipex, int ac, char **av, char **envp);
 
-// -------------------- Here_doc --------------- //
+/* Here_doc */
 int		handle_here_doc(t_pipex *pipex, char *limiter);
 
-// -------------------- Utils -------------------- //
+/* Utils */
 void	msg_error(char *msg);
 void	free_tab(char **tab);
 int		p_error(char *msg);
-void	create_pipes(t_pipex *pipex);
 
 #endif
