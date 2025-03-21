@@ -37,7 +37,7 @@ int	exec_command(t_pipex *pipex, char **envp)
 		{
 			if (WIFEXITED(status))
 				last_status = WEXITSTATUS(status);
-			else if (WIFSIGNAL(status))
+			else if (WIFSIGNALED(status))
 				last_status = 128 + WTERMSIG(status);
 		}
 		i++;
