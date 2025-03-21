@@ -15,7 +15,7 @@ int	exec_command(t_pipex *pipex, char **envp)
 		pipex->pids[i] = fork();
 		if (pipex->pids[i] < 0)
 		{
-			perror("fork")
+			perror("fork");
 			while (--i >= 0)
 				waitpid(pipex->pids[i], NULL, 0);
 			free(pipex->pids);

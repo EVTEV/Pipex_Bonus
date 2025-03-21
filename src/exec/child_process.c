@@ -28,6 +28,7 @@ static void	setup_stdin(t_pipex *pipex, int i)
 	{
 		perror("dup2");
 		exit(1);
+	}
 }
 
 static void	setup_stdout(t_pipex *pipex, int i)
@@ -74,8 +75,8 @@ static void	exit_child(t_pipex *pipex, int exit_code)
 		close(pipex->outfile);
 	close_pipes(pipex);
 	free_pipex(pipex);
-		if (pipex->env_path)
-			free_env_path(pipex->env_path);
+	if (pipex->env_path)
+		free_env_path(pipex->env_path);
 	exit(exit_code);
 }
 
