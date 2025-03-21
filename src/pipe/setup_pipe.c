@@ -98,9 +98,12 @@ void	free_pipex(t_pipex *pipex)
 		i = 0;
 		while (i < pipex->pipe_count)
 		{
-			free(pipex->pipes[i]);
+			if (pipex->pipes[i])
+				free(pipex->pipes[i]);
 			i++;
 		}
 		free(pipex->pipes);
 	}
+	if (pipex->pids)
+		free(pipex->pids);
 }

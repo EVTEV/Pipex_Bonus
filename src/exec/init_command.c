@@ -7,7 +7,7 @@ static int	setup_here_doc(t_pipex *pipex, char **av)
 	if (handle_here_doc(pipex, pipex->limiter) != 0)
 		return (1);
 	pipex->outfile = open(av[pipex->cmd_count + 3],
-			O_WRONLY | O_CREAT | O_APPEND, 0755);
+			O_WRONLY | O_CREAT | O_APPEND, 0644);
 	if (pipex->outfile < 0)
 	{
 		perror(av[pipex->cmd_count + 3]);
@@ -51,13 +51,24 @@ static int	parse_commands(t_pipex *pipex, char **av)
 	i = 0;
 	while (i < pipex->cmd_count)
 	{
-		pipex->cmds[i] = ft_split(av[i + start_idx], ' ');
-		if (!pipex->cmds[i])
-			return (1);
-		if (pipex->cmds[i][0] && pipex->cmds[i][0][0] != '\0')
-			pipex->cmd_paths[i] = find_cmd_path(pipex->cmds[i][0], pipex->env_path);
-		else
+		if (!av[i + start_idx] || !av[i + start_idx][0])
+		{
+			pipex->cmds[i] = (char **)malloc(sizeof(char *));
+			if (!pipex->cmds[i])
+				return (1);
+			pipex->cmds[i][0] = NULL;
 			pipex->cmd_paths[i] = NULL;
+		}
+		else
+		{
+			pipex->cmds[i] = ft_split(av[i + start_idx], ' ');
+			if (!pipex->cmds[i])
+				return (1);
+			if (pipex->cmds[i][0] && pipex->cmds[i][0][0] != '\0')
+				pipex->cmd_paths[i] = find_cmd_path(pipex->cmds[i][0], pipex->env_path);
+			else
+				pipex->cmd_paths[i] = NULL;
+		}
 		i++;
 	}
 	return (0);

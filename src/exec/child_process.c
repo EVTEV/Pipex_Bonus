@@ -34,7 +34,15 @@ static void	setup_stdout(t_pipex *pipex, int i)
 		if (pipex->outfile >= 0)
 		{
 			if (dup2(pipex->outfile, STDOUT_FILENO) < 0)
-				msg_error("dup2");
+			{
+				perror("dup2");  // Just print error, don't exit
+				null_fd = open("/dev/null", O_WRONLY);
+				if (null_fd >= 0)
+				{
+					dup2(null_fd, STDOUT_FILENO);
+					close(null_fd);
+				}
+			}
 		}
 		else
 		{

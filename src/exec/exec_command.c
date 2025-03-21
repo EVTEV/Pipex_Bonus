@@ -30,8 +30,7 @@ int	exec_command(t_pipex *pipex, char **envp)
 	i = 0;
 	while (i < pipex->cmd_count)
 	{
-		waitpid(pipex->pids[i], &status, 0);
-		if (i == pipex->cmd_count - 1 && WIFEXITED(status))
+		if (waitpid(pipex->pids[i], &status, 0) > 0 && i == pipex->cmd_count - 1 && WIFEXITED(status))
 			last_status = WEXITSTATUS(status);
 		i++;
 	}
