@@ -26,11 +26,14 @@ int	exec_command(t_pipex *pipex, char **envp)
 		i++;
 	}
 	close_pipes(pipex);
+	
+	// Wait for all child processes to finish
 	last_status = 0;
 	i = 0;
 	while (i < pipex->cmd_count)
 	{
-		if (waitpid(pipex->pids[i], &status, 0) > 0 && i == pipex->cmd_count - 1 && WIFEXITED(status))
+		waitpid(pipex->pids[i], &status, 0);
+		if (i == pipex->cmd_count - 1 && WIFEXITED(status))
 			last_status = WEXITSTATUS(status);
 		i++;
 	}

@@ -20,15 +20,23 @@ static int	setup_files(t_pipex *pipex, char **av)
 {
 	if (pipex->here_doc)
 		return (setup_here_doc(pipex, av));
+	
+	// Open infile
 	pipex->infile = open(av[1], O_RDONLY);
 	if (pipex->infile < 0)
+	{
 		perror(av[1]);
+		// Continue execution even if infile doesn't exist - it will handle this in child_process
+	}
+	
+	// Open outfile
 	pipex->outfile = open(av[pipex->cmd_count + 2],
-			O_WRONLY | O_CREAT | O_TRUNC, 0755);
+			O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (pipex->outfile < 0)
 	{
 		perror(av[pipex->cmd_count + 2]);
-		return (1);
+		// We can still continue if output file has permission issues
+		// The child process will handle this
 	}
 	return (0);
 }
@@ -51,13 +59,10 @@ static int	parse_commands(t_pipex *pipex, char **av)
 	i = 0;
 	while (i < pipex->cmd_count)
 	{
-		if (!av[i + start_idx] || !av[i + start_idx][0])
+		if (!av[i + start_idx] || av[i + start_idx][0] == '\0')
 		{
-			pipex->cmds[i] = (char **)malloc(sizeof(char *));
-			if (!pipex->cmds[i])
-				return (1);
-			pipex->cmds[i][0] = NULL;
-			pipex->cmd_paths[i] = NULL;
+			ft_putstr_fd("Error: Empty command not allowed\n", 2);
+			return (1);
 		}
 		else
 		{

@@ -67,12 +67,16 @@ void	child_process(t_pipex *pipex, int i, char **envp)
 		close(pipex->infile);
 	if (pipex->outfile >= 0)
 		close(pipex->outfile);
-	if (!pipex->cmds[i][0] || pipex->cmds[i][0][0] == '\0')
+	
+	// Handle empty command case or command not found
+	if (!pipex->cmds[i] || !pipex->cmds[i][0] || pipex->cmds[i][0][0] == '\0')
 	{
+		ft_putstr_fd("Error: Empty command\n", 2);
 		free_pipex(pipex);
 		free_env_path(pipex->env_path);
-		exit(0);
+		exit(127);
 	}
+	
 	if (!pipex->cmd_paths[i])
 	{
 		ft_putstr_fd("Command not found: ", 2);
@@ -82,9 +86,12 @@ void	child_process(t_pipex *pipex, int i, char **envp)
 		free_env_path(pipex->env_path);
 		exit(127);
 	}
-	execve(pipex->cmd_paths[i], pipex->cmds[i], envp);
-	perror("execve");
-	free_pipex(pipex);
-	free_env_path(pipex->env_path);
-	exit(127);
+	
+	if (execve(pipex->cmd_paths[i], pipex->cmds[i], envp) < 0)
+	{
+		perror("execve");
+		free_pipex(pipex);
+		free_env_path(pipex->env_path);
+		exit(127);
+	}
 }
