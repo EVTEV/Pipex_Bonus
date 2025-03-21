@@ -26,7 +26,10 @@ static int	setup_files(t_pipex *pipex, char **av)
 	pipex->outfile = open(av[pipex->cmd_count + 2],
 			O_WRONLY | O_CREAT | O_TRUNC, 0644);
 	if (pipex->outfile < 0)
+	{
 		perror(av[pipex->cmd_count + 2]);
+		return (1);
+	}
 	return (0);
 }
 
