@@ -6,6 +6,12 @@ void	msg_error(char *msg)
 	exit(1);
 }
 
+int	p_error(char *msg)
+{
+	perror(msg);
+	return (1);
+}
+
 void	free_tab(char **tab)
 {
 	int	i;
@@ -21,8 +27,11 @@ void	free_tab(char **tab)
 	free(tab);
 }
 
-int	p_error(char *msg)
+int	get_exit_status(int status)
 {
-	perror(msg);
-	return (1);
+	if (WIFEXITED(status))
+		return (WEXITSTATUS(status));
+	else if (WIFSIGNALED(status))
+		return (128 + WTERMSIG(status));
+	return (0);
 }

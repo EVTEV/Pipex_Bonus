@@ -1,5 +1,38 @@
 #include "../../inc/pipex_bonus.h"
 
+static int	allocate_pipes(t_pipex *pipex)
+{
+	pipex->pipes = (int **)malloc(sizeof(int *) * pipex->pipe_count);
+	if (!pipex->pipes)
+		return (1);
+	return (0);
+}
+
+static int	create_single_pipe(t_pipex *pipex, int i)
+{
+	pipex->pipes[i] = (int *)malloc(sizeof(int) * 2);
+	if (!pipex->pipes[i])
+		return (1);
+	if (pipe(pipex->pipes[i]) < 0)
+	{
+		free(pipex->pipes[i]);
+		p_error("pipe");
+	}
+	return (0);
+}
+
+static void	cleanup_pipes(t_pipex *pipex, int i)
+{
+	while (--i >= 0)
+	{
+		close(pipex->pipes[i][0]);
+		close(pipex->pipes[i][1]);
+		free(pipex->pipes[i]);
+	}
+	free(pipex->pipes);
+	pipex->pipes = NULL;
+}
+
 void	create_pipes(t_pipex *pipex)
 {
 	int	i;
@@ -7,43 +40,17 @@ void	create_pipes(t_pipex *pipex)
 	if (pipex->pipe_count <= 0)
 	{
 		pipex->pipes = NULL;
-		return;
+		return ;
 	}
-	
-	pipex->pipes = (int **)malloc(sizeof(int *) * pipex->pipe_count);
-	if (!pipex->pipes)
-		return;
-	
+	if (allocate_pipes(pipex) != 0)
+		return ;
 	i = 0;
 	while (i < pipex->pipe_count)
 	{
-		pipex->pipes[i] = (int *)malloc(sizeof(int) * 2);
-		if (!pipex->pipes[i])
+		if (create_single_pipe(pipex, i) != 0)
 		{
-			while (--i >= 0)
-			{
-				close(pipex->pipes[i][0]);
-				close(pipex->pipes[i][1]);
-				free(pipex->pipes[i]);
-			}
-			free(pipex->pipes);
-			pipex->pipes = NULL;
-			return;
-		}
-		
-		if (pipe(pipex->pipes[i]) < 0)
-		{
-			free(pipex->pipes[i]);
-			while (--i >= 0)
-			{
-				close(pipex->pipes[i][0]);
-				close(pipex->pipes[i][1]);
-				free(pipex->pipes[i]);
-			}
-			free(pipex->pipes);
-			pipex->pipes = NULL;
-			perror("pipe");
-			return;
+			cleanup_pipes(pipex, i);
+			return ;
 		}
 		i++;
 	}
@@ -54,8 +61,7 @@ void	close_pipes(t_pipex *pipex)
 	int	i;
 
 	if (!pipex->pipes)
-		return;
-		
+		return ;
 	i = 0;
 	while (i < pipex->pipe_count)
 	{
@@ -63,84 +69,4 @@ void	close_pipes(t_pipex *pipex)
 		close(pipex->pipes[i][1]);
 		i++;
 	}
-}
-
-void	free_cmds(char ***cmds, int cmd_count)
-{
-	int	i;
-	int	j;
-
-	if (!cmds)
-		return;
-		
-	i = 0;
-	while (i < cmd_count)
-	{
-		if (cmds[i])
-		{
-			j = 0;
-			while (cmds[i][j])
-			{
-				free(cmds[i][j]);
-				j++;
-			}
-			free(cmds[i]);
-		}
-		i++;
-	}
-	free(cmds);
-}
-
-void	free_env_path(char **env_path)
-{
-	int	i;
-
-	if (!env_path)
-		return;
-		
-	i = 0;
-	while (env_path[i])
-	{
-		free(env_path[i]);
-		i++;
-	}
-	free(env_path);
-}
-
-void	free_pipex(t_pipex *pipex)
-{
-	int	i;
-
-	if (!pipex)
-		return;
-		
-	if (pipex->cmds)
-		free_cmds(pipex->cmds, pipex->cmd_count);
-		
-	if (pipex->cmd_paths)
-	{
-		i = 0;
-		while (i < pipex->cmd_count)
-		{
-			if (pipex->cmd_paths[i])
-				free(pipex->cmd_paths[i]);
-			i++;
-		}
-		free(pipex->cmd_paths);
-	}
-	
-	if (pipex->pipes)
-	{
-		i = 0;
-		while (i < pipex->pipe_count)
-		{
-			if (pipex->pipes[i])
-				free(pipex->pipes[i]);
-			i++;
-		}
-		free(pipex->pipes);
-	}
-	
-	if (pipex->pids)
-		free(pipex->pids);
 }

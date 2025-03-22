@@ -4,7 +4,6 @@ int	main(int ac, char **av, char **envp)
 {
 	t_pipex	pipex;
 
-	ft_memset(&pipex, 0, sizeof(t_pipex));
 	if (ac < 5)
 	{
 		if (ac >= 2 && ft_strncmp(av[1], HERE_DOC, ft_strlen(HERE_DOC)) == 0)
