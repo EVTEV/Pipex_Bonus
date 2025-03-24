@@ -78,6 +78,16 @@ void	free_pipex(t_pipex *pipex)
 {
 	if (!pipex)
 		return ;
+	if (pipex->infile >= 0)
+	{
+		close(pipex->infile);
+		pipex->infile = -1;
+	}
+	if (pipex->outfile >= 0)
+	{
+		close(pipex->outfile);
+		pipex->outfile = -1;
+	}
 	if (pipex->cmds)
 		free_cmds(pipex->cmds, pipex->cmd_count);
 	free_cmd_paths(pipex);

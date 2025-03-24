@@ -3,9 +3,12 @@
 static void	setup_stdin_first_cmd(t_pipex *pipex)
 {
 	if (pipex->infile >= 0)
-		dup2(pipex->infile, STDIN_FILENO);
+	{
+		if (dup2(pipex->infile, STDIN_FILENO) < 0)
+			msg_error("dup2");
+	}
 	else
-		dup2(pipex->pipes[0][0], STDIN_FILENO);
+		close(STDIN_FILENO);
 }
 
 void	setup_stdin(t_pipex *pipex, int i)
@@ -20,7 +23,6 @@ void	setup_stdin(t_pipex *pipex, int i)
 		exit(1);
 	}
 }
-
 static void	setup_stdout_last_cmd(t_pipex *pipex)
 {
 	if (pipex->outfile >= 0)

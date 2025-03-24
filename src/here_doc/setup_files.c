@@ -12,7 +12,7 @@ int	setup_here_doc(t_pipex *pipex, char **av)
 	if (pipex->outfile < 0)
 	{
 		perror(av[pipex->cmd_count + 3]);
-		return (1);
+		// Continue pipeline even with error on outfile
 	}
 	return (0);
 }
@@ -21,6 +21,7 @@ int	setup_files(t_pipex *pipex, char **av)
 {
 	if (pipex->here_doc)
 		return (setup_here_doc(pipex, av));
+
 	pipex->infile = open(av[1], O_RDONLY);
 	if (pipex->infile < 0)
 		perror(av[1]);
@@ -30,7 +31,8 @@ int	setup_files(t_pipex *pipex, char **av)
 	if (pipex->outfile < 0)
 	{
 		perror(av[pipex->cmd_count + 2]);
-		return (1);
+		// We don't want to return an error here, as the commands should still run
+		// Just continue with pipex->outfile being -1
 	}
 	return (0);
 }

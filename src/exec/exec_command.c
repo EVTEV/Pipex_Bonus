@@ -48,7 +48,8 @@ static int	wait_for_child_processes(t_pipex *pipex)
 	i = 0;
 	while (i < pipex->cmd_count)
 	{
-		waitpid(pipex->pids[i], &status, 0);
+		if (waitpid(pipex->pids[i], &status, 0) == -1)
+			perror("waitpid");
 		if (i == pipex->cmd_count - 1)
 			last_status = get_exit_status(status);
 		i++;

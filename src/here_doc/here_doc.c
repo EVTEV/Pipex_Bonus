@@ -33,20 +33,22 @@ static int	read_here_doc_input(int pipe_fd[2], char *limiter,
 	char	*line;
 	int		result;
 
-	ft_putstr_fd("heredoc> ", 1);
-	line = get_next_line(0);
-	while (line)
+	while (1)
 	{
+		ft_putstr_fd("heredoc> ", 1);
+		line = get_next_line(0);
+		if (!line)
+		{
+			if (errno != 0)
+			{
+				close(pipe_fd[1]);
+				return (p_error("get_next_line"));
+			}
+			break;
+		}		
 		result = process_line(pipe_fd, line, limiter, limiter_len);
 		if (result != 0)
 			return (result > 0 ? 0 : result);
-		ft_putstr_fd("heredoc> ", 1);
-		line = get_next_line(0);
-		if (!line && errno != 0)
-		{
-			close(pipe_fd[1]);
-			return (p_error("get_next_line"));
-		}
 	}
 	return (0);
 }
@@ -62,5 +64,10 @@ int	handle_here_doc(t_pipex *pipex, char *limiter)
 	limiter_len = ft_strlen(limiter);
 	result = read_here_doc_input(pipe_fd, limiter, limiter_len);
 	close(pipe_fd[1]);
+	if (result != 0 && pipex->infile >= 0)
+	{
+		close(pipex->infile);
+		pipex->infile = -1;
+	}	
 	return (result);
 }

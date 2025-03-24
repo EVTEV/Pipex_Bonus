@@ -15,11 +15,10 @@ int	my_exec(t_pipex *pipex, int ac, char **av, char **envp)
 		return (1);
 	}
 	value = exec_command(pipex, envp); //exécution des commandes
-	if (pipex->infile >= 0)
-		close(pipex->infile);
-	if (pipex->outfile >= 0)
-		close(pipex->outfile);
+	
+	// free_pipex now handles closing file descriptors
 	free_pipex(pipex);
+	
 	if (pipex->env_path)
 		free_env_path(pipex->env_path);
 	return (value);

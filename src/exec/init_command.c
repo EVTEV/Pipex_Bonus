@@ -13,7 +13,7 @@ static void	initialize_pipex_values(t_pipex *pipex)
 
 static int	check_here_doc_mode(t_pipex *pipex, int ac, char **av)
 {
-	if (ft_strncmp(av[1], HERE_DOC, ft_strlen(HERE_DOC)) == 0)
+	if (av[1] && ft_strncmp(av[1], HERE_DOC, ft_strlen(HERE_DOC)) == 0)
 	{
 		if (ac < 6)
 			return (p_error("Error: Not enough arguments for here_doc"));
@@ -36,7 +36,7 @@ static void	cleanup_files(t_pipex *pipex)
 static int	create_and_parse(t_pipex *pipex, char **av)
 {
 	create_pipes(pipex);
-	if (!pipex->pipes)
+	if (!pipex->pipes && pipex->pipe_count > 0)
 	{
 		cleanup_files(pipex);
 		return (p_error("Error: Failed to create pipes"));
@@ -54,12 +54,24 @@ static int	create_and_parse(t_pipex *pipex, char **av)
 int	init_command(t_pipex *pipex, int ac, char **av)
 {
 	initialize_pipex_values(pipex);
+	
+	// Handle case of empty first argument (test 23)
+	if (ac > 1 && (!av[1] || av[1][0] == '\0'))
+	{
+		ft_putstr_fd("Error: First argument cannot be empty\n", 2);
+		return (1);
+	}
+	
 	if (check_here_doc_mode(pipex, ac, av) != 0)
 		return (1);
+	
 	pipex->pipe_count = pipex->cmd_count - 1;
+	
 	if (setup_files(pipex, av) != 0)
 		return (1);
+	
 	if (create_and_parse(pipex, av) != 0)
 		return (1);
+	
 	return (0);
 }
