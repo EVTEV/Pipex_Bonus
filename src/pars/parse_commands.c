@@ -91,7 +91,10 @@ int	parse_commands(t_pipex *pipex, char **av)
 
 	if (allocate_command_arrays(pipex) != 0)
 		return (1);
-	start_idx = pipex->here_doc ? 3 : 2;
+	if (pipex->here_doc)
+		start_idx = 3;
+	else
+		start_idx = 2;
 	if (process_all_commands(pipex, av, start_idx) != 0)
 	{
 		cleanup_parse_commands(pipex, pipex->cmd_count);

@@ -60,7 +60,12 @@ static int	read_here_doc_input(int pipe_fd[2], char *limiter,
 		}
 		result = process_line(pipe_fd, line, limiter, limiter_len);
 		if (result != 0)
-			return (result > 0 ? 0 : result);
+		{
+			if (result > 0)
+				return (0);
+			else
+				return (result);
+		}
 	}
 	return (0);
 }
