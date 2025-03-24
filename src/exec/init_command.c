@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   init_command.c                                     :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: acaes <acaes@student.s19.be>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/24 15:44:54 by acaes             #+#    #+#             */
+/*   Updated: 2025/03/24 15:44:54 by acaes            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../inc/pipex_bonus.h"
 
 static void	initialize_pipex_values(t_pipex *pipex)
@@ -66,6 +78,6 @@ int	init_command(t_pipex *pipex, int ac, char **av)
 	if (setup_files(pipex, av) != 0)
 		return (1);
 	if (create_and_parse(pipex, av) != 0)
-		return (1);	
+		return (1);
 	return (0);
 }

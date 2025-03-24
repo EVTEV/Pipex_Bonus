@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   here_doc.c                                         :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: acaes <acaes@student.s19.be>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/24 15:46:22 by acaes             #+#    #+#             */
+/*   Updated: 2025/03/24 15:46:22 by acaes            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../inc/pipex_bonus.h"
 
 static int	setup_here_doc_pipe(int pipe_fd[2], int *infile)
@@ -11,8 +23,8 @@ static int	setup_here_doc_pipe(int pipe_fd[2], int *infile)
 static int	process_line(int pipe_fd[1], char *line, char *limiter,
 		size_t limiter_len)
 {
-	if ((ft_strncmp(line, limiter, limiter_len) == 0 &&
-			(line[limiter_len] == '\n' || line[limiter_len] == '\0')))
+	if ((ft_strncmp(line, limiter, limiter_len) == 0
+			&& (line[limiter_len] == '\n' || line[limiter_len] == '\0')))
 	{
 		free(line);
 		return (1);
@@ -45,7 +57,7 @@ static int	read_here_doc_input(int pipe_fd[2], char *limiter,
 				return (p_error("get_next_line"));
 			}
 			break ;
-		}		
+		}
 		result = process_line(pipe_fd, line, limiter, limiter_len);
 		if (result != 0)
 			return (result > 0 ? 0 : result);
@@ -68,6 +80,6 @@ int	handle_here_doc(t_pipex *pipex, char *limiter)
 	{
 		close(pipex->infile);
 		pipex->infile = -1;
-	}	
+	}
 	return (result);
 }

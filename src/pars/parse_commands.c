@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   parse_commands.c                                   :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: acaes <acaes@student.s19.be>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/24 15:46:45 by acaes             #+#    #+#             */
+/*   Updated: 2025/03/24 15:46:45 by acaes            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "../../inc/pipex_bonus.h"
 
 static int	allocate_command_arrays(t_pipex *pipex)
@@ -75,7 +87,7 @@ static void	cleanup_parse_commands(t_pipex *pipex, int i)
 
 int	parse_commands(t_pipex *pipex, char **av)
 {
-	int start_idx;
+	int	start_idx;
 
 	if (allocate_command_arrays(pipex) != 0)
 		return (1);

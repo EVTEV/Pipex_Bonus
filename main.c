@@ -1,3 +1,15 @@
+/* ************************************************************************** */
+/*                                                                            */
+/*                                                        :::      ::::::::   */
+/*   main.c                                             :+:      :+:    :+:   */
+/*                                                    +:+ +:+         +:+     */
+/*   By: acaes <acaes@student.s19.be>               +#+  +:+       +#+        */
+/*                                                +#+#+#+#+#+   +#+           */
+/*   Created: 2025/03/24 15:42:04 by acaes             #+#    #+#             */
+/*   Updated: 2025/03/24 15:42:04 by acaes            ###   ########.fr       */
+/*                                                                            */
+/* ************************************************************************** */
+
 #include "inc/pipex_bonus.h"
 
 int	main(int ac, char **av, char **envp)
@@ -12,8 +24,6 @@ int	main(int ac, char **av, char **envp)
 			ft_putstr_fd("Usage: ./pipex file1 cmd1 cmd2 ... cmdn file2\n", 2);
 		return (1);
 	}
-	
-	// Additional validation for here_doc mode
 	if (ac >= 6 && av[1] && ft_strncmp(av[1], HERE_DOC, ft_strlen(HERE_DOC)) == 0)
 	{
 		if (!av[2] || !av[3] || !av[4] || !av[5])
