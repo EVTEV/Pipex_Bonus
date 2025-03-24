@@ -13,6 +13,7 @@ typedef struct s_pipex
 {
 	int		infile;
 	int		outfile;
+	int		outfile_error;
 	int		**pipes;
 	pid_t	*pids;
 	char	**env_path;

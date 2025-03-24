@@ -44,7 +44,7 @@ static int	read_here_doc_input(int pipe_fd[2], char *limiter,
 				close(pipe_fd[1]);
 				return (p_error("get_next_line"));
 			}
-			break;
+			break ;
 		}		
 		result = process_line(pipe_fd, line, limiter, limiter_len);
 		if (result != 0)

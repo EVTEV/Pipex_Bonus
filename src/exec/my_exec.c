@@ -15,10 +15,9 @@ int	my_exec(t_pipex *pipex, int ac, char **av, char **envp)
 		return (1);
 	}
 	value = exec_command(pipex, envp); //exécution des commandes
-	
-	// free_pipex now handles closing file descriptors
+	if (pipex->outfile_error)
+		value = 1;
 	free_pipex(pipex);
-	
 	if (pipex->env_path)
 		free_env_path(pipex->env_path);
 	return (value);

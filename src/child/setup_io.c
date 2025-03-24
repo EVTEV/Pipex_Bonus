@@ -23,23 +23,34 @@ void	setup_stdin(t_pipex *pipex, int i)
 		exit(1);
 	}
 }
+
 static void	setup_stdout_last_cmd(t_pipex *pipex)
 {
+	int	null_fd;
+
 	if (pipex->outfile >= 0)
-		dup2(pipex->outfile, STDOUT_FILENO);
+	{
+		if (dup2(pipex->outfile, STDOUT_FILENO) < 0)
+			msg_error("dup2");
+	}
 	else
-		dup2(pipex->pipes[pipex->cmd_count - 1][1], STDOUT_FILENO);
+	{
+		null_fd = open("/dev/null", O_WRONLY);
+		if (null_fd >= 0)
+		{
+			if (dup2(null_fd, STDOUT_FILENO) < 0)
+				perror("dup2");
+			close(null_fd);
+		}
+		else
+			close(STDOUT_FILENO);
+	}
 }
 
 void	setup_stdout(t_pipex *pipex, int i)
 {
 	if (i == pipex->cmd_count - 1)
-	{
 		setup_stdout_last_cmd(pipex);
-	}
 	else if (dup2(pipex->pipes[i][1], STDOUT_FILENO) < 0)
-	{
-		perror("dup2");
-		exit(1);
-	}
+		msg_error("dup2");
 }

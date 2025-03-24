@@ -4,6 +4,7 @@ static void	initialize_pipex_values(t_pipex *pipex)
 {
 	pipex->infile = -1;
 	pipex->outfile = -1;
+	pipex->outfile_error = 0;
 	pipex->pipes = NULL;
 	pipex->cmds = NULL;
 	pipex->cmd_paths = NULL;
@@ -54,24 +55,17 @@ static int	create_and_parse(t_pipex *pipex, char **av)
 int	init_command(t_pipex *pipex, int ac, char **av)
 {
 	initialize_pipex_values(pipex);
-	
-	// Handle case of empty first argument (test 23)
 	if (ac > 1 && (!av[1] || av[1][0] == '\0'))
 	{
 		ft_putstr_fd("Error: First argument cannot be empty\n", 2);
 		return (1);
 	}
-	
 	if (check_here_doc_mode(pipex, ac, av) != 0)
 		return (1);
-	
 	pipex->pipe_count = pipex->cmd_count - 1;
-	
 	if (setup_files(pipex, av) != 0)
 		return (1);
-	
 	if (create_and_parse(pipex, av) != 0)
-		return (1);
-	
+		return (1);	
 	return (0);
 }
